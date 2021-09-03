@@ -1,0 +1,48 @@
+{
+    "name": "itanix/clockwork",
+    "type": "typo3-cms-extension",
+    "description": "TYPO3 Adapter for Clockwork php dev tools https://underground.works/clockwork",
+    "authors": [
+        {
+            "name": "Michael M\u00fcnch",
+            "role": "Developer"
+        }
+    ],
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "typo3/cms-core": "^10.4",
+        "itsgoingd/clockwork": "^5.1"
+    },
+    "require-dev": {
+        "typo3/testing-framework": "^6.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Itanix\\Clockwork\\": "Classes"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Itanix\\Clockwork\\Tests\\": "Tests"
+        }
+    },
+    "replace": {
+        "typo3-ter/clockwork": "self.version"
+    },
+    "config": {
+        "vendor-dir": ".Build/vendor",
+        "bin-dir": ".Build/bin"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "TYPO3\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
+        ]
+    },
+    "extra": {
+        "typo3/cms": {
+            "cms-package-dir": "{$vendor-dir}/typo3/cms",
+            "web-dir": ".Build/public",
+            "extension-key": "clockwork"
+        }
+    }
+}

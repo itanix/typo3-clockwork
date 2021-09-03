@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    autowire: false
+    autoconfigure: false
+    public: false
+
+  Itanix\Clockwork\EventDispatcher\EventDispatcher:
+    autowire: true
+    public: true
+
+  Psr\EventDispatcher\EventDispatcherInterface:
+    alias: Itanix\Clockwork\EventDispatcher\EventDispatcher
+    public: true
+
+  Psr\EventDispatcher\ListenerProviderInterface:
+    alias: TYPO3\CMS\Core\EventDispatcher\ListenerProvider
+    public: true
