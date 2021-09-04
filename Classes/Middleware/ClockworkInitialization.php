@@ -20,7 +20,8 @@ class ClockworkInitialization implements MiddlewareInterface
         $this->clockwork = Clockwork::init([
             'api' => '/__clockwork?request=',
             'storage_files_path' => GeneralUtility::getFileAbsFileName('typo3temp/clockwork'),
-            'toolbar' => false
+            'toolbar' => false,
+            'serialization_depth' => 3
         ]);
 
         $this->clockwork->addDataSource(new TYPO3DataSource);
