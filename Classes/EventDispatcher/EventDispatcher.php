@@ -43,7 +43,7 @@ class EventDispatcher extends \TYPO3\CMS\Core\EventDispatcher\EventDispatcher
             } elseif ($listener instanceof \Closure) {
                 $listener = new \ReflectionFunction($listener);
 
-                if (strpos($listener->getNamespaceName(), 'Clockwork\\') === 0) { // skip our own listeners
+                if (strpos($listener->getNamespaceName(), 'Itanix\\Clockwork\\') === 0) { // skip our own listeners
                     return;
                 }
 

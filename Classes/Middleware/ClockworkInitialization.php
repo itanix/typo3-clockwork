@@ -29,6 +29,9 @@ class ClockworkInitialization implements MiddlewareInterface
         return $handler->handle($request);
     }
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
     protected function initializeDatabaseSource()
     {
         /** @var ConnectionPool $connectionPool */

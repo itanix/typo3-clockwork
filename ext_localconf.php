@@ -7,4 +7,8 @@ call_user_func(static function () {
         \Itanix\Clockwork\Log\Writer\ClockworkLogWriter::class => []
     ];
 
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][\TYPO3\CMS\Extbase\Mvc\Dispatcher::class] = [
+        'className' => \Itanix\Clockwork\Mvc\Dispatcher::class
+    ];
+
 });
