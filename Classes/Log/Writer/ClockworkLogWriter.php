@@ -15,6 +15,6 @@ class ClockworkLogWriter extends \TYPO3\CMS\Core\Log\Writer\AbstractWriter
     public function writeLog(LogRecord $record)
     {
         $clockwork = Clockwork::instance();
-        $clockwork && $clockwork->log($record->getLevel(), $record->getMessage());
+        $clockwork && $clockwork->log($record->getLevel(), $record->getMessage(), $record->getData());
     }
 }
