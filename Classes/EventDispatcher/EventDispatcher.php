@@ -9,6 +9,18 @@ use TYPO3\CMS\Core\Utility\PathUtility;
 
 class EventDispatcher extends \TYPO3\CMS\Core\EventDispatcher\EventDispatcher
 {
+    protected array $ignoredEvents = [
+        \TYPO3\CMS\Core\Resource\Event\BeforeFileProcessingEvent::class,
+        \TYPO3\CMS\Core\Resource\Event\AfterFileProcessingEvent::class,
+        \TYPO3\CMS\Extbase\Event\Persistence\AfterObjectThawedEvent::class,
+        \TYPO3\CMS\Core\Resource\Event\EnrichFileMetaDataEvent::class,
+        \TYPO3\CMS\Core\Resource\Event\GeneratePublicUrlForResourceEvent::class,
+        \TYPO3\CMS\Core\Resource\Event\BeforeResourceStorageInitializationEvent::class,
+        \TYPO3\CMS\Core\Resource\Event\AfterResourceStorageInitializationEvent::class,
+        \TYPO3\CMS\Extbase\Event\Persistence\ModifyQueryBeforeFetchingObjectDataEvent::class,
+        \TYPO3\CMS\Extbase\Event\Persistence\ModifyResultAfterFetchingObjectDataEvent::class,
+    ];
+
     public function dispatch(object $event)
     {
         // If the event is already stopped, nothing to do here.
@@ -16,17 +28,30 @@ class EventDispatcher extends \TYPO3\CMS\Core\EventDispatcher\EventDispatcher
             return $event;
         }
 
+        $this->registerEvent($event);
+
+        return parent::dispatch($event);
+    }
+
+    protected function registerEvent(object $event)
+    {
+        if(!$this->shouldCollect($event)) return;
+
         $clockwork = Clockwork::instance();
 
         if($clockwork)
         {
-            $clockwork->addEvent(get_class($event), [], microtime(true), [
+            $clockwork->addEvent(get_class($event), $event, microtime(true), [
                 'listeners' => $this->findListenersFor($event),
                 'trace'     => (new Serializer)->trace(StackTrace::get())
             ]);
         }
+    }
 
-        return parent::dispatch($event);
+    protected function shouldCollect(object $event): bool
+    {
+        $eventName = get_class($event);
+        return !in_array($eventName, $this->ignoredEvents);
     }
 
     protected function findListenersFor($event)
