@@ -34,8 +34,9 @@ class Dispatcher extends \TYPO3\CMS\Extbase\Mvc\Dispatcher
         $controllerActionName = $request->getControllerActionName() . 'Action';
 
         $eventName = $controllerObjectName . '::' . $controllerActionName;
+        $identifier = uniqid($eventName.'_');
 
-        $clockwork->event($eventName)->run(function() use($request, $response) {
+        $clockwork->event($eventName)->name($identifier)->run(function() use($request, $response) {
             parent::dispatch($request, $response);
         });
     }

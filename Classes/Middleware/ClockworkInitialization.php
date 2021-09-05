@@ -18,10 +18,50 @@ class ClockworkInitialization implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $this->clockwork = Clockwork::init([
-            'api' => '/__clockwork?request=',
-            'storage_files_path' => GeneralUtility::getFileAbsFileName('typo3temp/clockwork'),
+            'enable' => $GLOBALS['TYPO3_CONF_VARS']['FE']['debug'] ?? false,
+
+            'features' => [
+                'performance' => [
+                    'client_metrics' => false
+                ]
+            ],
+
             'toolbar' => false,
-            'serialization_depth' => 3
+
+            'requests' => [
+                'on_demand' => false,
+                'errors_only' => false,
+                'slow_threshold' => null,
+                'slow_only' => false,
+                'sample' => false,
+                'except' => [],
+                'only' => [],
+                'except_preflight' => true
+            ],
+
+            'api' => '/__clockwork?request=',
+
+            'web' => [
+                'enable' => false,
+                'path' => '',
+                'uri' => ''
+            ],
+
+            'storage' => 'files',
+            'storage_files_path' => GeneralUtility::getFileAbsFileName('typo3temp/clockwork'),
+            'storage_files_compress' => false,
+            'storage_expiration' => 60 * 24 * 7,
+
+            'stack_traces' => [
+                'enabled' => true,
+                'limit' => 10,
+                'skip_vendors' => [],
+                'skip_namespaces' => [],
+                'skip_classes' => []
+            ],
+
+            'serialization_depth' => 3,
+            'serialization_blackbox' => [],
         ]);
 
         $this->clockwork->addDataSource(new TYPO3DataSource);
