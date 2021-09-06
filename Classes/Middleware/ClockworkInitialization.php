@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -15,27 +16,36 @@ class ClockworkInitialization implements MiddlewareInterface
 {
     protected Clockwork $clockwork;
 
+    protected ExtensionConfiguration $extensionConfiguration;
+
+    public function __construct(ExtensionConfiguration $extensionConfiguration)
+    {
+        $this->extensionConfiguration = $extensionConfiguration;
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $extConf = $this->extensionConfiguration->get('clockwork');
+
         $this->clockwork = Clockwork::init([
             'enable' => $GLOBALS['TYPO3_CONF_VARS']['FE']['debug'] ?? false,
 
             'features' => [
                 'performance' => [
-                    'client_metrics' => false
+                    'client_metrics' => boolval($extConf['features']['performance']['client_metrics'] ?? false)
                 ]
             ],
 
-            'toolbar' => false,
+            'toolbar' => boolval($extConf['toolbar'] ?? false),
 
             'requests' => [
-                'on_demand' => false,
-                'errors_only' => false,
-                'slow_threshold' => null,
-                'slow_only' => false,
+                'on_demand' => boolval($extConf['requests']['on_demand'] ?? false),
+                'errors_only' => boolval($extConf['requests']['errors_only'] ?? false),
+                'slow_threshold' => !empty($extConf['requests']['slow_threshold']) ? intval($extConf['requests']['slow_threshold']) : null,
+                'slow_only' => boolval($extConf['requests']['slow_only'] ?? false),
                 'sample' => false,
-                'except' => [],
-                'only' => [],
+                'except' => !empty($extConf['requests']['except']) ? GeneralUtility::trimExplode(',', $extConf['requests']['except']) : [],
+                'only' => !empty($extConf['requests']['only']) ? GeneralUtility::trimExplode(',', $extConf['requests']['only']) : [],
                 'except_preflight' => true
             ],
 
@@ -48,9 +58,9 @@ class ClockworkInitialization implements MiddlewareInterface
             ],
 
             'storage' => 'files',
-            'storage_files_path' => GeneralUtility::getFileAbsFileName('typo3temp/clockwork'),
-            'storage_files_compress' => false,
-            'storage_expiration' => 60 * 24 * 7,
+            'storage_files_path' => GeneralUtility::getFileAbsFileName($extConf['storage_files_path'] ?? 'typo3temp/clockwork'),
+            'storage_files_compress' => boolval($extConf['storage_files_compress'] ?? false),
+            'storage_expiration' => intval($extConf['storage_expiration'] ?? (60 * 24 * 7)),
 
             'stack_traces' => [
                 'enabled' => true,

@@ -4,9 +4,19 @@ services:
     autoconfigure: false
     public: false
 
+  Itanix\Clockwork\Middleware\ClockworkInitialization:
+    autowire: true
+    autoconfigure: true
+
   Itanix\Clockwork\EventDispatcher\EventDispatcher:
     autowire: true
     public: true
+
+  Itanix\Clockwork\EventListener\AssetRenderer\InjectAssets:
+    tags:
+      - name: event.listener
+        identifier: itanix/clockwork/InjectAssets
+        event: TYPO3\CMS\Core\Page\Event\BeforeJavaScriptsRenderingEvent
 
   Psr\EventDispatcher\EventDispatcherInterface:
     alias: Itanix\Clockwork\EventDispatcher\EventDispatcher

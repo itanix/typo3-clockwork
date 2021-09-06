@@ -1,0 +1,41 @@
+# cat=basic; type=boolean; label=Enable toolbar: Clockwork can show a toolbar with basic metrics on all responses. Here you can enable or disable this feature.
+toolbar = false
+
+# cat=basic; type=boolean; label=Always collect data: You can enable this setting to collect data even when Clockwork is disabled. Eg. for future analysis.
+collect_data_always = false
+
+# cat=basic; type=string; label=Metadata storage: Path where the Clockwork metadata is stored.
+storage_files_path = typo3temp/clockwork
+
+# cat=basic; type=boolean; label=Compress: Compress the metadata files using gzip, trading a little bit of performance for lower disk usage.
+storage_files_compress = false
+
+# cat=basic; type=int+; label=Storage Expiration: Maximum lifetime of collected metadata in minutes, older requests will automatically be deleted, 0 to disable
+storage_expiration = 10080
+
+features {
+    performance {
+        # cat=features/performance; type=boolean; label=Client-metrics: The metrics implementation uses cookies, if your website can't use cookies you might want to disable this feature.
+        client_metrics = false
+    }
+}
+
+requests {
+    # cat=requests; type=boolean; label=On Demand: With on-demand mode enabled, Clockwork will only profile requests when the browser extension is open or you manually pass a "clockwork-profile" cookie or get/post data key.
+    on_demand = false
+
+    # cat=requests; type=boolean; Label=Collect only errors: (requests with HTTP 4xx and 5xx responses)
+    errors_only = false
+
+    # cat=requests; type=int+; Label=Slow Threshold: Response time threshold in miliseconds after which the request will be marked as slow
+    slow_threshold =
+
+    # cat=requests; type=boolean; Label=Slow Only: Collect only slow requests
+    slow_threshold = false
+
+    # cat=requests; type=string; Label=Except: List of URIs that should not be collected, separated by comma. e.g: /api/.*
+    except =
+
+    # cat=requests; type=string; Label=Only: List of URIs that should be collected, any other URI will not be collected if not empty. Separated by comma. e.g: /api/.*
+    only =
+}
